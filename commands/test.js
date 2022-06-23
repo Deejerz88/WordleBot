@@ -3,6 +3,7 @@ const async = require("async");
 require("dotenv").config();
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const mongoose = require("mongoose");
+var _ = require("lodash");
 
 const james = [0, 1, 0.92, 0.78, 0.58, 0.38, 0.22];
 
@@ -51,13 +52,14 @@ module.exports = {
         .catch((error) => {
           console.log(error);
         });
-
       const db = mongoose.connection;
       const collection = db.collection("Wordle");
-      collection.find({ user: `${username}-${id}` }).toArray((err, result) => {
+      collection.find({}).toArray((err, result) => {
         if (err) throw err;
         mongoose.connection.close();
-        const dist = result[0].distribution;
+        const stats = _.find(result, ["user", `${username}-${id}`]);
+        console.log(stats);
+        const dist = stats.distribution;
         dist[score]++;
         const numGames = dist.reduce((a, b) => a + b, 0);
         let total = 0;
@@ -69,7 +71,7 @@ module.exports = {
         const days = day - 352 + 1;
         const week = Math.ceil(days / 7);
         const golfDay = days % 7;
-        const gScores = result[0].wordleGolf;
+        const gScores = stats.wordleGolf;
         console.log(gScores);
         const gWeek = gScores[`week${week}`];
         gWeek[`day${golfDay}`] = Number(score);
