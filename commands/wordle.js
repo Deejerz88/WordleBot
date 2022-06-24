@@ -70,7 +70,8 @@ module.exports = {
         const jamesScore = (jamesTotal / numGames) * 10;
         const days = day - 352 + 1;
         const week = Math.ceil(days / 7);
-        const golfDay = days % 7;
+        const rem = days % 7;
+        const golfDay = rem === 0 ? 7 : rem;
         const gScores = stats.wordleGolf;
         // console.log(gScores);
         let golfScores = [];
