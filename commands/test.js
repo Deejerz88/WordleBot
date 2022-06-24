@@ -196,6 +196,34 @@ ${golfStr}
             } else {
               pinned.first().edit(`${lbStr}`);
             }
+          })
+          .then(async () => {
+            let newValues = {
+              $set: {
+                games: numGames,
+                average: avg,
+                jamesScore: jamesScore,
+                distribution: dist,
+                wordleGolf: gScores,
+              },
+            };
+            await mongoose
+              .connect(process.env.MONGO_URI)
+              .then(() => console.log("MongoDB has been connected"))
+              .catch((error) => {
+                console.log(error);
+              });
+            const db = mongoose.connection;
+            const collection = db.collection("Wordle");
+            collection.updateOne(
+              { user: `${username}-${id}` },
+              newValues,
+              { upsert: true },
+              (err, res) => {
+                console.log(res);
+                if (err) throw err;
+              }
+            );
           });
 
         console.log("replied");

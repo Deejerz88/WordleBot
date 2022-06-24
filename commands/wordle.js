@@ -88,8 +88,8 @@ module.exports = {
           golfStr = thisDay < golfDay ? (golfStr += "  |  ") : golfStr;
         }
         // console.log(golfStr);
-        let plusMinus = gTotal - (golfDay * 4);
-        plusMinus = plusMinus > 0 ? `+ ${plusMinus}`:plusMinus
+        let plusMinus = gTotal - golfDay * 4;
+        plusMinus = plusMinus > 0 ? `+ ${plusMinus}` : plusMinus;
         let todayPM = score - 4;
         if (todayPM == -3) {
           todayPM += `   🎯`;
@@ -107,7 +107,7 @@ module.exports = {
           todayPM = `+ ${todayPM}   :drosky: `;
         }
         //  console.log(gScores);
-        
+
         interaction
           .editReply(
             reply +
@@ -171,8 +171,8 @@ ${golfStr}
             _.forEach(leaderBoard, (value, key) => {
               let users = value.users;
               let weekScore = value.weekScore;
-              weekScore = weekScore > 0 ? `+ ${weekScore}` : weekScore
-              let emoji = pos === 1 ? '    🏆':''
+              weekScore = weekScore > 0 ? `+ ${weekScore}` : weekScore;
+              let emoji = pos === 1 ? "    🏆" : "";
               // console.log(value);
               // console.log(weekScore);
               users.forEach((user) => {
@@ -196,6 +196,34 @@ ${golfStr}
             } else {
               pinned.first().edit(`${lbStr}`);
             }
+          })
+          .then(async () => {
+            let newValues = {
+              $set: {
+                games: numGames,
+                average: avg,
+                jamesScore: jamesScore,
+                distribution: dist,
+                wordleGolf: gScores,
+              },
+            };
+            await mongoose
+              .connect(process.env.MONGO_URI)
+              .then(() => console.log("MongoDB has been connected"))
+              .catch((error) => {
+                console.log(error);
+              });
+            const db = mongoose.connection;
+            const collection = db.collection("Wordle");
+            collection.updateOne(
+              { user: `${username}-${id}` },
+              newValues,
+              { upsert: true },
+              (err, res) => {
+                console.log(res);
+                if (err) throw err;
+              }
+            );
           });
 
         console.log("replied");
