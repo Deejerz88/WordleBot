@@ -3,6 +3,7 @@ const async = require("async");
 require("dotenv").config();
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const mongoose = require("mongoose");
+const msgIds = require("../msgIds");
 var _ = require("lodash");
 
 const james = [0, 1, 0.92, 0.78, 0.58, 0.38, 0.22];
@@ -23,14 +24,14 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply();
     let value = interaction.options.getString("input");
-    console.log(value);
+    // console.log(value);
     let user = interaction.user;
     let username = user.username;
-    console.log(username);
+    // console.log(username);
     let id = user.id;
-    console.log(id);
+    // console.log(id);
     if (value[0].toLowerCase() === "w") {
-      console.log("test");
+      // console.log("test");
 
       let stringArr = value
         .substring(0, value.indexOf("/") + 2)
@@ -38,12 +39,11 @@ module.exports = {
         .split(" ");
       let score = stringArr[2][0];
       let day = stringArr[1];
-      let blocks = ''
+      let blocks = "";
       try {
         blocks = value.substring(value.indexOf("/") + 3).split(" ");
-        blocks = "\n" + blocks.join("\n") + '\n';
-      } catch (err) {
-      }
+        blocks = "\n" + blocks.join("\n") + "\n";
+      } catch (err) {}
       let reply = stringArr.join(" ") + blocks;
 
       await mongoose
@@ -58,7 +58,8 @@ module.exports = {
         if (err) throw err;
         mongoose.connection.close();
         const stats = _.find(result, ["user", `${username}-${id}`]);
-        console.log(stats);
+
+        // console.log(stats);
         const dist = stats.distribution;
         dist[score]++;
         const numGames = dist.reduce((a, b) => a + b, 0);
@@ -73,8 +74,49 @@ module.exports = {
         const golfDay = days % 7;
         const gScores = stats.wordleGolf;
         console.log(gScores);
+        let golfScores = [];
+        result.forEach((stat) =>
+          golfScores.push(_.pick(stat, ["user", "wordleGolf"]))
+        );
+        console.log(golfScores);
+        golfScores.forEach((userStats) => {
+          let weekObj = userStats.wordleGolf[`week${week}`];
+          let thisWeek = Object.values(weekObj);
+          // console.log(thisWeek);
+          let weekPM = thisWeek.reduce((a, b) => a + (b - 4), 0);
+          // console.log(weekPM);
+          userStats.wordleGolf = weekPM;
+          // console.log(userStats)
+        });
+
+        let lbStr = `\n**Week ${week} Leaderboard**\n`;
+        let pos = 1;
+        golfScores = _.chain(golfScores)
+          .groupBy("wordleGolf")
+          .map((value, key) => ({ weekScore: Number(key), users: value }))
+          .value();
+        console.log(golfScores);
+        let leaderBoard = _.sortBy(golfScores, ["weekScore"]);
+        // console.log(leaderBoard);
+        _.forEach(leaderBoard, (value, key) => {
+          let users = value.users;
+          users.forEach((user) => {
+            // console.log(users.length);
+            let posStr = users.length > 1 ? "T" + pos : "   " + pos;
+            lbStr += `${posStr}. ${user.user.substring(
+              0,
+              user.user.indexOf("-")
+            )}\n`;
+          });
+          pos += users.length;
+        });
+        // console.log(lbStr);
+         console.log(gScores);
         const gWeek = gScores[`week${week}`];
+        
+        // console.log(gWeek);
         gWeek[`day${golfDay}`] = Number(score);
+        console.log(gScores);
         let gTotal = 0;
         let golfStr = "";
         for (day in gWeek) {
@@ -86,7 +128,7 @@ module.exports = {
           golfStr += `**Hole ${thisDay}:** ${hole}`;
           golfStr = thisDay < golfDay ? (golfStr += "  |  ") : golfStr;
         }
-        console.log(golfStr);
+        // console.log(golfStr);
         const plusMinus = gTotal - golfDay * 4;
         let todayPM = score - 4;
         if (todayPM == -3) {
@@ -104,39 +146,86 @@ module.exports = {
         } else if (todayPM == 3) {
           todayPM += `   :drosky: `;
         }
-        interaction.editReply(
-          reply +
-            "\n**New Totals For " +
-            username +
-            "**\n**Total Games:** " +
-            numGames +
-            "\n**Average:** " +
-            avg +
-            "\n**James Score:** " +
-            jamesScore +
-            "\n**1's:** " +
-            dist[1] +
-            " | **2's:** " +
-            dist[2] +
-            " | **3's:** " +
-            dist[3] +
-            " | **4's:** " +
-            dist[4] +
-            " | **5's:** " +
-            dist[5] +
-            " | **6's:** " +
-            dist[6] +
-            " | **Fails** " +
-            dist[0] +
-            `
+         console.log(gScores);
+        interaction
+          .editReply(
+            reply +
+              "\n**New Totals For " +
+              username +
+              "**\n**Total Games:** " +
+              numGames +
+              "\n**Average:** " +
+              avg +
+              "\n**James Score:** " +
+              jamesScore +
+              "\n**1's:** " +
+              dist[1] +
+              " | **2's:** " +
+              dist[2] +
+              " | **3's:** " +
+              dist[3] +
+              " | **4's:** " +
+              dist[4] +
+              " | **5's:** " +
+              dist[5] +
+              " | **6's:** " +
+              dist[6] +
+              " | **Fails** " +
+              dist[0] +
+              `
 ----------------------------------------------------------------
 🏌️  **WORDLE GOLF**   ⛳
 **Week** ${week}  **Day** ${golfDay}
 **Score**: ${todayPM}
 **Total**: ${plusMinus}
 ${golfStr}
+
 ----------------------------------------------------------------`
-        ); //.then((msg)=> msg.pin());
+          )
+          .then(async (msg) => {
+            let pinned = await msg.channel.messages.fetchPinned();
+            pinned = pinned.filter((m) =>
+              m.content.includes(`Week ${week} Leaderboard`)
+            );
+            // console.log(pinned.first())
+            if (!pinned.first()) {
+              msg.channel.send(`${lbStr}`).then((msg) => msg.pin());
+            } else {
+              pinned.first().edit(`${lbStr}`);
+            }
+          })
+          .then(async () => {
+            // console.log(gScores)
+            // gScores[`week${week}`][`day${golfDay}`] = Number(score)
+            // console.log(gScores)
+            let newValues = {
+              $set: {
+                games: numGames,
+                average: avg,
+                jamesScore: jamesScore,
+                distribution: dist,
+                wordleGolf: gScores,
+              },
+            };
+            await mongoose
+              .connect(process.env.MONGO_URI)
+              .then(() => console.log("MongoDB has been connected"))
+              .catch((error) => {
+                console.log(error);
+              });
+            const db = mongoose.connection;
+            const collection = db.collection("Wordle");
+            collection.updateOne(
+              { user: `${username}-${id}` },
+              newValues,
+              { upsert: true },
+              (err, res) => {
+                console.log(res);
+                if (err) throw err;
+              }
+            );
+          });
+
         console.log("replied");
       });
     }
