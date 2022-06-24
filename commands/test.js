@@ -3,7 +3,6 @@ const async = require("async");
 require("dotenv").config();
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const mongoose = require("mongoose");
-const msgIds = require("../msgIds");
 var _ = require("lodash");
 
 const james = [0, 1, 0.92, 0.78, 0.58, 0.38, 0.22];
@@ -50,7 +49,7 @@ module.exports = {
         .connect(process.env.MONGO_URI)
         .then(() => console.log("MongoDB has been connected"))
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
       const db = mongoose.connection;
       const collection = db.collection("Wordle");
@@ -73,12 +72,12 @@ module.exports = {
         const week = Math.ceil(days / 7);
         const golfDay = days % 7;
         const gScores = stats.wordleGolf;
-        console.log(gScores);
+        // console.log(gScores);
         let golfScores = [];
         result.forEach((stat) =>
           golfScores.push(_.pick(stat, ["user", "wordleGolf"]))
         );
-        console.log(golfScores);
+        // console.log(golfScores);
         golfScores.forEach((userStats) => {
           let weekObj = userStats.wordleGolf[`week${week}`];
           let thisWeek = Object.values(weekObj);
@@ -95,7 +94,7 @@ module.exports = {
           .groupBy("wordleGolf")
           .map((value, key) => ({ weekScore: Number(key), users: value }))
           .value();
-        console.log(golfScores);
+        // console.log(golfScores);
         let leaderBoard = _.sortBy(golfScores, ["weekScore"]);
         // console.log(leaderBoard);
         _.forEach(leaderBoard, (value, key) => {
@@ -111,7 +110,7 @@ module.exports = {
           pos += users.length;
         });
         // console.log(lbStr);
-         console.log(gScores);
+        //  console.log(gScores);
         const gWeek = gScores[`week${week}`];
         
         // console.log(gWeek);
@@ -146,7 +145,7 @@ module.exports = {
         } else if (todayPM == 3) {
           todayPM += `   :drosky: `;
         }
-         console.log(gScores);
+        //  console.log(gScores);
         interaction
           .editReply(
             reply +
