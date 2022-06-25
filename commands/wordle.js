@@ -228,6 +228,7 @@ ${golfStr}
                 if (err) throw err;
               }
             );
+            mongoose.connection.close();
           });
 
         console.log("replied");
