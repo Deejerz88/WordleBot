@@ -111,13 +111,13 @@ module.exports = {
         interaction
           .editReply(
             reply +
-              "\n**New Totals For " +
+              "\n__**New Totals For " +
               username +
-              "**\n**Total Games:** " +
+              "**__\n> **Total Games:** " +
               numGames +
-              "\n**Average:** " +
+              "\n> **Average:** " +
               avg +
-              "\n**James Score:** " +
+              "\n> **James Score:** " +
               jamesScore +
               "\n**1's:** " +
               dist[1] +
@@ -135,10 +135,10 @@ module.exports = {
               dist[0] +
               `
 ----------------------------------------------------------------
-🏌️  **WORDLE GOLF**   ⛳
+🏌️  __**WORDLE GOLF**__   ⛳
 **Week** ${week}  **Day** ${golfDay}
-**Score**: ${todayPM}
-**Total**: ${plusMinus}
+> **Score**: ${todayPM}
+> **Total**: ${plusMinus}
 ${golfStr}
 ----------------------------------------------------------------`
           )
@@ -148,17 +148,19 @@ ${golfStr}
               golfScores.push(_.pick(stat, ["user", "wordleGolf"]))
             );
             // console.log(golfScores);
+            let numHoles = {};
             golfScores.forEach((userStats) => {
               let weekObj = userStats.wordleGolf[`week${week}`];
               let thisWeek = Object.values(weekObj);
+              numHoles[userStats.user] = thisWeek.length;
               // console.log(thisWeek);
               let weekPM = thisWeek.reduce((a, b) => a + (b - 4), 0);
               // console.log(weekPM);
               userStats.wordleGolf = weekPM;
               // console.log(userStats)
             });
-
-            let lbStr = `\n**Week ${week} Leaderboard**\n`;
+            console.log({numHoles})
+            let lbStr = `\n__**Week ${week} Leaderboard**__\n`;
             let pos = 1;
             golfScores = _.chain(golfScores)
               .groupBy("wordleGolf")
@@ -178,10 +180,12 @@ ${golfStr}
               users.forEach((user) => {
                 // console.log(users.length);
                 let posStr = users.length > 1 ? "T" + pos : "   " + pos;
-                lbStr += `${posStr}. ${user.user.substring(
+                lbStr += `   **${posStr}. ${user.user.substring(
                   0,
                   user.user.indexOf("-")
-                )}   |  ${weekScore}${emoji}\n`;
+                )}**   |   ${
+                  numHoles[user.user]
+                } played   |   **${weekScore}**${emoji}\n`;
               });
               pos += users.length;
             });
@@ -198,32 +202,32 @@ ${golfStr}
             }
           })
           .then(async () => {
-            let newValues = {
-              $set: {
-                games: numGames,
-                average: avg,
-                jamesScore: jamesScore,
-                distribution: dist,
-                wordleGolf: gScores,
-              },
-            };
-            await mongoose
-              .connect(process.env.MONGO_URI)
-              .then(() => console.log("MongoDB has been connected"))
-              .catch((error) => {
-                console.log(error);
-              });
-            const db = mongoose.connection;
-            const collection = db.collection("Wordle");
-            collection.updateOne(
-              { user: `${username}-${id}` },
-              newValues,
-              { upsert: true },
-              (err, res) => {
-                console.log(res);
-                if (err) throw err;
-              }
-            );
+            // let newValues = {
+            //   $set: {
+            //     games: numGames,
+            //     average: avg,
+            //     jamesScore: jamesScore,
+            //     distribution: dist,
+            //     wordleGolf: gScores,
+            //   },
+            // };
+            // await mongoose
+            //   .connect(process.env.MONGO_URI)
+            //   .then(() => console.log("MongoDB has been connected"))
+            //   .catch((error) => {
+            //     console.log(error);
+            //   });
+            // const db = mongoose.connection;
+            // const collection = db.collection("Wordle");
+            // collection.updateOne(
+            //   { user: `${username}-${id}` },
+            //   newValues,
+            //   { upsert: true },
+            //   (err, res) => {
+            //     console.log(res);
+            //     if (err) throw err;
+            //   }
+            // );
           });
 
         console.log("replied");
