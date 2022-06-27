@@ -64,10 +64,10 @@ module.exports = {
         const numGames = dist.reduce((a, b) => a + b, 0);
         let total = 0;
         dist.forEach((s, i) => (total += s * i));
-        const avg = total / numGames;
+        const avg = (total / numGames).toFixed(3);
         let jamesTotal = 0;
         dist.forEach((s, i) => (jamesTotal += s * james[i]));
-        const jamesScore = (jamesTotal / numGames) * 10;
+        const jamesScore = ((jamesTotal / numGames) * 10).toFixed(3);
         const days = day - 352 + 1;
         const week = Math.ceil(days / 7);
         const rem = days % 7;
@@ -151,13 +151,31 @@ ${golfStr}
             let numHoles = {};
             golfScores.forEach((userStats) => {
               let weekObj = userStats.wordleGolf[`week${week}`];
+              console.log({weekObj})
               let thisWeek = Object.values(weekObj);
-              numHoles[userStats.user] = thisWeek.length;
-              // console.log(thisWeek);
+              console.log({thisWeek})
+              let weekNumGames = thisWeek.length;
+              let weekAvg = _.sum(thisWeek) / weekNumGames
+              console.log({weekAvg})
+              var result = _(weekObj)
+                .countBy("name")
+                .map((count, name) => ({ name, count }))
+                .value();
+
+              let weekJamesTotal = 0;
+              thisWeek.forEach((s, i) => (weekJamesTotal += s * james[s]));
+              console.log(weekJamesTotal)
+              const weekJamesScore = (
+                (weekJamesTotal / weekNumGames) *
+                10
+              ).toFixed(3);
+              numHoles[userStats.user] = weekNumGames;
+              console.log({weekNumGames}, {weekJamesScore});
+
               let weekPM = thisWeek.reduce((a, b) => a + (b - 4), 0);
               // console.log(weekPM);
               userStats.wordleGolf = weekPM;
-              // console.log(userStats)
+              console.log(userStats)
             });
             console.log({numHoles})
             let lbStr = `\n__**Week ${week} Leaderboard**__\n`;

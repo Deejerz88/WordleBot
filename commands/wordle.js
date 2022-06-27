@@ -64,10 +64,10 @@ module.exports = {
         const numGames = dist.reduce((a, b) => a + b, 0);
         let total = 0;
         dist.forEach((s, i) => (total += s * i));
-        const avg = total / numGames;
+        const avg = (total / numGames).toFixed(3)
         let jamesTotal = 0;
         dist.forEach((s, i) => (jamesTotal += s * james[i]));
-        const jamesScore = (jamesTotal / numGames) * 10;
+        const jamesScore = ((jamesTotal / numGames) * 10).toFixed(3)
         const days = day - 352 + 1;
         const week = Math.ceil(days / 7);
         const rem = days % 7;
@@ -134,13 +134,13 @@ module.exports = {
               " | **Fails** " +
               dist[0] +
               `
-----------------------------------------------------------------
+---------------------------------------------------------------
 🏌️  __**WORDLE GOLF**__   ⛳
 **Week** ${week}  **Day** ${golfDay}
 > **Score**: ${todayPM}
 > **Total**: ${plusMinus}
 ${golfStr}
-----------------------------------------------------------------`
+---------------------------------------------------------------`
           )
           .then(async (msg) => {
             let golfScores = [];
