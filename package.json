@@ -23,6 +23,7 @@
     "googleapis": "^100.0.0",
     "gs": "^0.0.2",
     "lodash": "^4.17.21",
+    "mongoose": "^6.4.1",
     "node-windows": "^1.0.0-beta.6",
     "nodemon": "^2.0.15",
     "qckwinsvc": "^1.0.0",

@@ -73,7 +73,11 @@ module.exports = {
         const rem = days % 7;
         const golfDay = rem === 0 ? 7 : rem;
         const gScores = stats.wordleGolf;
-        const gWeek = gScores[`week${week}`];
+        let gWeek = gScores[`week${week}`];
+        if (!gWeek) {
+          gScores[`week${week}`] = {};
+          gWeek = gScores[`week${week}`];
+        }
         gWeek[`day${golfDay}`] = Number(score);
         console.log(gScores);
         let gTotal = 0;
@@ -151,6 +155,8 @@ ${golfStr}
             let numHoles = {};
             golfScores.forEach((userStats) => {
               let weekObj = userStats.wordleGolf[`week${week}`];
+              console.log({weekObj})
+              if (!weekObj) return
               let thisWeek = Object.values(weekObj);
               numHoles[userStats.user] = thisWeek.length;
               // console.log(thisWeek);
@@ -171,8 +177,9 @@ ${golfStr}
             console.log(leaderBoard);
 
             _.forEach(leaderBoard, (value, key) => {
-              let users = value.users;
+              let users = value.users
               let weekScore = value.weekScore;
+              if (!weekScore && weekScore !== 0) return
               weekScore = weekScore > 0 ? `+ ${weekScore}` : weekScore;
               let emoji = pos === 1 ? "    🏆" : "";
               // console.log(value);
@@ -192,7 +199,7 @@ ${golfStr}
             console.log(lbStr);
             let pinned = await msg.channel.messages.fetchPinned();
             pinned = pinned.filter((m) =>
-              m.content.includes(`Week ${week} Leaderboard`)
+              m.content.includes(`Leaderboard`)
             );
             // console.log(pinned.first())
             if (!pinned.first()) {
