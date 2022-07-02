@@ -94,14 +94,18 @@ module.exports = {
             if (day.slice(-1) != i) {
               gWeek[`day${i}`] = 8;
               i += 1;
+              dist["0"] += 1;
             }
             i += 1;
+            
+            console.log(dist)
           });
         }
         let weekArr = Object.entries(gWeek);
-        console.log(weekArr);
         weekArr.sort((a, b) => a[0].slice(-1) - b[0].slice(-1));
-        console.log(weekArr);
+        gScores[`week${week}`] = Object.fromEntries(weekArr);
+        console.log({ gWeek })
+        console.log({gScores})
         let gTotal = 0;
         let golfStr = "";
         weekArr.forEach((weekDay) => {
