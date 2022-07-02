@@ -5,7 +5,10 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const mongoose = require("mongoose");
 var _ = require("lodash");
 
-const james = [0, 1, 0.92, 0.78, 0.58, 0.38, 0.22];
+const james = [
+  0, 1, 0.9253705585449039, 0.7761116756347115, 0.5778998317544551,
+  0.3780879878741986, 0.21887851276999337,
+];
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -37,6 +40,7 @@ module.exports = {
         .trim()
         .split(" ");
       let score = stringArr[2][0];
+      score = isNaN(score) ? 0 : score;
       let day = stringArr[1];
       let blocks = "";
       try {
@@ -64,10 +68,10 @@ module.exports = {
         const numGames = dist.reduce((a, b) => a + b, 0);
         let total = 0;
         dist.forEach((s, i) => (total += s * i));
-        const avg = (total / numGames).toFixed(3)
+        const avg = (total / numGames).toFixed(3);
         let jamesTotal = 0;
         dist.forEach((s, i) => (jamesTotal += s * james[i]));
-        const jamesScore = ((jamesTotal / numGames) * 10).toFixed(3)
+        const jamesScore = ((jamesTotal / numGames) * 10).toFixed(3);
         const days = day - 352 + 1;
         const week = Math.ceil(days / 7);
         const rem = days % 7;
@@ -78,19 +82,38 @@ module.exports = {
           gScores[`week${week}`] = {};
           gWeek = gScores[`week${week}`];
         }
+        score = !score ? 8 : score;
         gWeek[`day${golfDay}`] = Number(score);
         console.log(gScores);
+
+        let golfDays = Object.keys(gWeek);
+        let gDaysPlayed = golfDays.length;
+        if (gDaysPlayed !== golfDay) {
+          let i = 1;
+          golfDays.forEach((day) => {
+            if (day.slice(-1) != i) {
+              gWeek[`day${i}`] = 8;
+              i += 1;
+            }
+            i += 1;
+          });
+        }
+        let weekArr = Object.entries(gWeek);
+        console.log(weekArr);
+        weekArr.sort((a, b) => a[0].slice(-1) - b[0].slice(-1));
+        console.log(weekArr);
         let gTotal = 0;
         let golfStr = "";
-        for (day in gWeek) {
-          const s = gWeek[day];
+        weekArr.forEach((weekDay) => {
+          const s = weekDay[1];
           gTotal += s;
           let hole = s - 4;
-          const thisDay = day.slice(-1);
+          const thisDay = weekDay[0].slice(-1);
           hole = hole > 0 ? "+" + hole : hole;
           golfStr += `**Hole ${thisDay}:** ${hole}`;
           golfStr = thisDay < golfDay ? (golfStr += "  |  ") : golfStr;
-        }
+        });
+
         // console.log(golfStr);
         let plusMinus = gTotal - golfDay * 4;
         plusMinus = plusMinus > 0 ? `+ ${plusMinus}` : plusMinus;
@@ -108,7 +131,7 @@ module.exports = {
         } else if (todayPM == 2) {
           todayPM = `+ ${todayPM}   💩`;
         } else if (todayPM == 3) {
-          todayPM = `+ ${todayPM}   :drosky: `;
+          todayPM = `+ ${todayPM}   ☃️ `;
         }
         //  console.log(gScores);
 
@@ -155,8 +178,8 @@ ${golfStr}
             let numHoles = {};
             golfScores.forEach((userStats) => {
               let weekObj = userStats.wordleGolf[`week${week}`];
-              console.log({weekObj})
-              if (!weekObj) return
+              console.log({ weekObj });
+              if (!weekObj) return;
               let thisWeek = Object.values(weekObj);
               numHoles[userStats.user] = thisWeek.length;
               // console.log(thisWeek);
@@ -177,9 +200,9 @@ ${golfStr}
             console.log(leaderBoard);
 
             _.forEach(leaderBoard, (value, key) => {
-              let users = value.users
+              let users = value.users;
               let weekScore = value.weekScore;
-              if (!weekScore && weekScore !== 0) return
+              if (!weekScore && weekScore !== 0) return;
               weekScore = weekScore > 0 ? `+ ${weekScore}` : weekScore;
               let emoji = pos === 1 ? "    🏆" : "";
               // console.log(value);
@@ -198,9 +221,7 @@ ${golfStr}
             });
             console.log(lbStr);
             let pinned = await msg.channel.messages.fetchPinned();
-            pinned = pinned.filter((m) =>
-              m.content.includes(`Leaderboard`)
-            );
+            pinned = pinned.filter((m) => m.content.includes(`Leaderboard`));
             // console.log(pinned.first())
             if (!pinned.first()) {
               msg.channel.send(`${lbStr}`).then((msg) => msg.pin());
@@ -235,7 +256,6 @@ ${golfStr}
                 if (err) throw err;
               }
             );
-            
           });
 
         console.log("replied");

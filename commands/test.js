@@ -5,7 +5,10 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const mongoose = require("mongoose");
 var _ = require("lodash");
 
-const james = [0, 1, 0.92, 0.78, 0.58, 0.38, 0.22];
+const james = [
+  0, 1, 0.9253705585449039, 0.7761116756347115, 0.5778998317544551,
+  0.3780879878741986, 0.21887851276999337,
+];
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -37,11 +40,12 @@ module.exports = {
         .trim()
         .split(" ");
       let score = stringArr[2][0];
+      score = isNaN(score) ? 0 : score;
       let day = stringArr[1];
       let blocks = "";
       try {
         blocks = value.substring(value.indexOf("/") + 3).split(" ");
-        blocks = "\n" + blocks.join("\n") + "\n";
+        blocks = blocks.join("\n") + "\n";
       } catch (err) {}
       let reply = stringArr.join(" ") + blocks;
 
@@ -73,20 +77,43 @@ module.exports = {
         const rem = days % 7;
         const golfDay = rem === 0 ? 7 : rem;
         const gScores = stats.wordleGolf;
-        const gWeek = gScores[`week${week}`];
+        let gWeek = gScores[`week${week}`];
+        if (!gWeek) {
+          gScores[`week${week}`] = {};
+          gWeek = gScores[`week${week}`];
+        }
+        score = !score ? 8 : score;
         gWeek[`day${golfDay}`] = Number(score);
         console.log(gScores);
+        
+        let golfDays = Object.keys(gWeek);
+        let gDaysPlayed = golfDays.length;
+        if (gDaysPlayed !== golfDay) {
+          let i = 1;
+          golfDays.forEach((day) => {
+            if (day.slice(-1) != i) {
+              gWeek[`day${i}`] = 8;
+              i += 1;
+            }
+            i += 1;
+          });
+        }
+        let weekArr = Object.entries(gWeek);
+        console.log(weekArr);
+        weekArr.sort((a, b) => a[0].slice(-1) - b[0].slice(-1));
+        console.log(weekArr);
         let gTotal = 0;
         let golfStr = "";
-        for (day in gWeek) {
-          const s = gWeek[day];
+        weekArr.forEach(weekDay => {
+          const s = weekDay[1];
           gTotal += s;
           let hole = s - 4;
-          const thisDay = day.slice(-1);
+          const thisDay = weekDay[0].slice(-1);
           hole = hole > 0 ? "+" + hole : hole;
           golfStr += `**Hole ${thisDay}:** ${hole}`;
           golfStr = thisDay < golfDay ? (golfStr += "  |  ") : golfStr;
-        }
+        })
+      
         // console.log(golfStr);
         let plusMinus = gTotal - golfDay * 4;
         plusMinus = plusMinus > 0 ? `+ ${plusMinus}` : plusMinus;
@@ -104,7 +131,7 @@ module.exports = {
         } else if (todayPM == 2) {
           todayPM = `+ ${todayPM}   💩`;
         } else if (todayPM == 3) {
-          todayPM = `+ ${todayPM}   :drosky: `;
+          todayPM = `+ ${todayPM}   ☃️ `;
         }
         //  console.log(gScores);
 
@@ -134,13 +161,13 @@ module.exports = {
               " | **Fails** " +
               dist[0] +
               `
-----------------------------------------------------------------
+---------------------------------------------------------------
 🏌️  __**WORDLE GOLF**__   ⛳
 **Week** ${week}  **Day** ${golfDay}
 > **Score**: ${todayPM}
 > **Total**: ${plusMinus}
 ${golfStr}
-----------------------------------------------------------------`
+---------------------------------------------------------------`
           )
           .then(async (msg) => {
             let golfScores = [];
@@ -151,33 +178,17 @@ ${golfStr}
             let numHoles = {};
             golfScores.forEach((userStats) => {
               let weekObj = userStats.wordleGolf[`week${week}`];
-              console.log({weekObj})
+              console.log({ weekObj });
+              if (!weekObj) return;
               let thisWeek = Object.values(weekObj);
-              console.log({thisWeek})
-              let weekNumGames = thisWeek.length;
-              let weekAvg = _.sum(thisWeek) / weekNumGames
-              console.log({weekAvg})
-              var result = _(weekObj)
-                .countBy("name")
-                .map((count, name) => ({ name, count }))
-                .value();
-
-              let weekJamesTotal = 0;
-              thisWeek.forEach((s, i) => (weekJamesTotal += s * james[s]));
-              console.log(weekJamesTotal)
-              const weekJamesScore = (
-                (weekJamesTotal / weekNumGames) *
-                10
-              ).toFixed(3);
-              numHoles[userStats.user] = weekNumGames;
-              console.log({weekNumGames}, {weekJamesScore});
-
+              numHoles[userStats.user] = thisWeek.length;
+              // console.log(thisWeek);
               let weekPM = thisWeek.reduce((a, b) => a + (b - 4), 0);
               // console.log(weekPM);
               userStats.wordleGolf = weekPM;
-              console.log(userStats)
+              // console.log(userStats)
             });
-            console.log({numHoles})
+            console.log({ numHoles });
             let lbStr = `\n__**Week ${week} Leaderboard**__\n`;
             let pos = 1;
             golfScores = _.chain(golfScores)
@@ -191,6 +202,7 @@ ${golfStr}
             _.forEach(leaderBoard, (value, key) => {
               let users = value.users;
               let weekScore = value.weekScore;
+              if (!weekScore && weekScore !== 0) return;
               weekScore = weekScore > 0 ? `+ ${weekScore}` : weekScore;
               let emoji = pos === 1 ? "    🏆" : "";
               // console.log(value);
@@ -209,9 +221,7 @@ ${golfStr}
             });
             console.log(lbStr);
             let pinned = await msg.channel.messages.fetchPinned();
-            pinned = pinned.filter((m) =>
-              m.content.includes(`Week ${week} Leaderboard`)
-            );
+            pinned = pinned.filter((m) => m.content.includes(`Leaderboard`));
             // console.log(pinned.first())
             if (!pinned.first()) {
               msg.channel.send(`${lbStr}`).then((msg) => msg.pin());
