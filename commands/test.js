@@ -33,8 +33,6 @@ module.exports = {
     let id = user.id;
     // console.log(id);
     if (value[0].toLowerCase() === "w") {
-      console.log("test");
-
       let stringArr = value
         .substring(0, value.indexOf("/") + 2)
         .trim()
@@ -77,11 +75,14 @@ module.exports = {
         const rem = days % 7;
         const golfDay = rem === 0 ? 7 : rem;
         const gScores = stats.wordleGolf;
-        let gWeek = gScores[`week${week}`].scores;
-        if (!gWeek) {
+        let gWeek;
+        if (golfDay === 1) {
           gScores[`week${week}`] = { scores: {}, stats: {} };
           gWeek = gScores[`week${week}`].scores;
+        } else {
+          gWeek = gScores[`week${week}`].scores;
         }
+
         score = !score ? 8 : score;
         gWeek[`day${golfDay}`] = Number(score);
         console.log(gScores);
@@ -274,32 +275,32 @@ ${golfStr}
             }
           })
           .then(async () => {
-            // let newValues = {
-            //   $set: {
-            //     games: numGames,
-            //     average: avg,
-            //     jamesScore: jamesScore,
-            //     distribution: dist,
-            //     wordleGolf: gScores,
-            //   },
-            // };
-            // await mongoose
-            //   .connect(process.env.MONGO_URI)
-            //   .then(() => console.log("MongoDB has been connected"))
-            //   .catch((error) => {
-            //     console.log(error);
-            //   });
-            // const db = mongoose.connection;
-            // const collection = db.collection("Wordle");
-            // collection.updateOne(
-            //   { user: `${username}-${id}` },
-            //   newValues,
-            //   { upsert: true },
-            //   (err, res) => {
-            //     console.log(res);
-            //     if (err) throw err;
-            //   }
-            // );
+            let newValues = {
+              $set: {
+                games: numGames,
+                average: avg,
+                jamesScore: jamesScore,
+                distribution: dist,
+                wordleGolf: gScores,
+              },
+            };
+            await mongoose
+              .connect(process.env.MONGO_URI)
+              .then(() => console.log("MongoDB has been connected"))
+              .catch((error) => {
+                console.log(error);
+              });
+            const db = mongoose.connection;
+            const collection = db.collection("Wordle");
+            collection.updateOne(
+              { user: `${username}-${id}` },
+              newValues,
+              { upsert: true },
+              (err, res) => {
+                console.log(res);
+                if (err) throw err;
+              }
+            );
           });
 
         console.log("replied");
@@ -435,7 +436,7 @@ ${golfStr}
 ---------------------------------------------------------------
 🏌️  __**WORDLE GOLF**__   ⛳
 **Week** ${week}  **Day** ${golfDay}
-> **Score**: ${todayPM}
+> **Score**: ${todayPM} adfasdfa
 > **Total**: ${plusMinus}
 > **James Score**: ${weekJamesScore}
 ${golfStr}
@@ -488,7 +489,6 @@ ${golfStr}
               //  console.log({users})
               users = _.orderBy(users, ["jamesScore"], ["desc"]);
               //  console.log('ordered users',users)
-              leaderBoard[i].users = users;
             });
             console.log(leaderBoard[0].users);
             leaderBoard.forEach((leader) => {
@@ -498,11 +498,12 @@ ${golfStr}
               weekScore = weekScore > 0 ? `+ ${weekScore}` : weekScore;
               // console.log(value);
               // console.log(weekScore);
-              users.forEach((user) => {
+              users.forEach((user, i) => {
                 // console.log(users.length);
+                
+                let numUsers = users.length
                 let emoji = pos === 1 && i === 0 ? "    🏆" : "";
-                if (pos ===1 & i>0) pos = 2
-                let posStr = users.length > 1 ? "T" + pos : "   " + pos;
+                let posStr = numUsers > 1 ? "T" + pos : "  " + pos;
                 lbStr += `   **${posStr}. ${user.user.substring(
                   0,
                   user.user.indexOf("-")
@@ -512,7 +513,7 @@ ${golfStr}
                 let js =
                   pos === 1
                     ? "       " +
-                      `   ↳ **James Score**: ${jamesScores[user.user]}\n`
+                      `   ↳ **James Score**: ${user.jamesScore}\n`
                     : "";
                 lbStr += js;
               });
@@ -527,35 +528,37 @@ ${golfStr}
             } else {
               pinned.first().edit(`${lbStr}`);
             }
+            console.log('the end')
           })
-          .then(async () => {
-            // let newValues = {
-            //   $set: {
-            //     games: numGames,
-            //     average: avg,
-            //     jamesScore: jamesScore,
-            //     distribution: dist,
-            //     wordleGolf: gScores,
-            //   },
-            // };
-            // await mongoose
-            //   .connect(process.env.MONGO_URI)
-            //   .then(() => console.log("MongoDB has been connected"))
-            //   .catch((error) => {
-            //     console.log(error);
-            //   });
-            // const db = mongoose.connection;
-            // const collection = db.collection("Wordle");
-            // collection.updateOne(
-            //   { user: `${username}-${id}` },
-            //   newValues,
-            //   { upsert: true },
-            //   (err, res) => {
-            //     console.log(res);
-            //     if (err) throw err;
-            //   }
-            // );
-          });
+          // .then(async () => {
+          //   // console.log("saving");
+          //   // let newValues = {
+          //   //   $set: {
+          //   //     games: numGames,
+          //   //     average: avg,
+          //   //     jamesScore: jamesScore,
+          //   //     distribution: dist,
+          //   //     wordleGolf: gScores,
+          //   //   },
+          //   // };
+          //   // await mongoose
+          //   //   .connect(process.env.MONGO_URI)
+          //   //   .then(() => console.log("MongoDB has been connected"))
+          //   //   .catch((error) => {
+          //   //     console.log(error);
+          //   //   });
+          //   // const db = mongoose.connection;
+          //   // const collection = db.collection("Wordle");
+          //   // collection.updateOne(
+          //   //   { user: `${username}-${id}` },
+          //   //   newValues,
+          //   //   { upsert: true },
+          //   //   (err, res) => {
+          //   //     console.log(res);
+          //   //     if (err) throw err;
+          //   //   }
+          //   // );
+          // });
       });
     }
   },

@@ -33,7 +33,6 @@ module.exports = {
     let id = user.id;
     // console.log(id);
     if (value[0].toLowerCase() === "w") {
-
       let stringArr = value
         .substring(0, value.indexOf("/") + 2)
         .trim()
@@ -76,13 +75,14 @@ module.exports = {
         const rem = days % 7;
         const golfDay = rem === 0 ? 7 : rem;
         const gScores = stats.wordleGolf;
-        let gWeek
+        let gWeek;
         if (golfDay === 1) {
           gScores[`week${week}`] = { scores: {}, stats: {} };
           gWeek = gScores[`week${week}`].scores;
+        } else {
+          gWeek = gScores[`week${week}`].scores;
         }
-        else { gWeek = gScores[`week${week}`].scores; }
-          
+
         score = !score ? 8 : score;
         gWeek[`day${golfDay}`] = Number(score);
         console.log(gScores);
@@ -497,12 +497,22 @@ ${golfStr}
               let weekScore = leader.weekScore;
               if (!weekScore && weekScore !== 0) return;
               weekScore = weekScore > 0 ? `+ ${weekScore}` : weekScore;
-              let emoji = pos === 1 ? "    🏆" : "";
               // console.log(value);
               // console.log(weekScore);
-              users.forEach((user) => {
+              users.forEach((user, i) => {
                 // console.log(users.length);
-                let posStr = users.length > 1 ? "T" + pos : "  " + pos;
+
+                let numUsers = users.length;
+                if (
+                  pos === 1 &&
+                  i > 0 &&
+                  users[i - 1].jamesScore !== user.jamesScore
+                ) {
+                  pos = 1 + i;
+                  numUsers--;
+                }
+                let emoji = pos === 1 && i === 0 ? "    🏆" : "";
+                let posStr = numUsers > 1 ? "T" + pos : "  " + pos;
                 lbStr += `   **${posStr}. ${user.user.substring(
                   0,
                   user.user.indexOf("-")
@@ -511,10 +521,10 @@ ${golfStr}
                 } played   |   **${weekScore}**${emoji}\n`;
                 let js =
                   pos === 1
-                    ? "       " +
-                      `   ↳ **James Score**: ${jamesScores[user.user]}\n`
+                    ? "       " + `   ↳ **James Score**: ${user.jamesScore}\n`
                     : "";
                 lbStr += js;
+                // jamesScores[user.user]
               });
               pos += users.length;
             });
@@ -529,7 +539,7 @@ ${golfStr}
             }
           })
           .then(async () => {
-            console.log('saving')
+            console.log("saving");
             let newValues = {
               $set: {
                 games: numGames,
