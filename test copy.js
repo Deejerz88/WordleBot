@@ -3,8 +3,8 @@ const async = require("async");
 require("dotenv").config();
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const mongoose = require("mongoose");
-const setGolfScore = require("../lib/setGolfScore.js");
-const calcGolfStats = require("../lib/calcGolfStats.js");
+const setGolfScore = require('./lib/setGolfScore.js')
+const calcGolfStats = require('./lib/calcGolfStats.js')
 var _ = require("lodash");
 
 const james = [
@@ -35,6 +35,8 @@ module.exports = {
     let id = user.id;
     // console.log(id);
     if (value[0].toLowerCase() === "w") {
+      console.log("test");
+
       let stringArr = value
         .substring(0, value.indexOf("/") + 2)
         .trim()
@@ -68,12 +70,8 @@ module.exports = {
         const golfDay = rem === 0 ? 7 : rem;
         const gScores = stats.wordleGolf;
         const numGames = dist.reduce((a, b) => a + b, 0);
-        let weekArr = [];
-        let gTotal = 0;
-        let golfStr = "";
-        let weekJamesScore = 0;
-        let plusMinus
-        // let todayPM
+        let weekArr
+        let weekJamesScore = 0
         dist[score]++;
         let total = 0;
         dist.forEach((s, i) => (total += s * i));
@@ -106,7 +104,7 @@ module.exports = {
         //   10
         // ).toFixed(3);
         // console.log({ weekJamesScore });
-        console.log({ weekJamesScore });
+        console.log({weekJamesScore})
         gScores[`week${week}`].scores = Object.fromEntries(weekArr);
         gScores[`week${week}`].stats.jamesScore = weekJamesScore;
         // console.log({weekArr})
@@ -114,9 +112,8 @@ module.exports = {
         // console.log( JSON.stringify(gScores));
 
         // console.log(golfStr);
-        // let plusMinus = gTotal - golfDay * 4;
-        // plusMinus = plusMinus > 0 ? `+ ${plusMinus}` : plusMinus;
-
+        let plusMinus = gTotal - golfDay * 4;
+        plusMinus = plusMinus > 0 ? `+ ${plusMinus}` : plusMinus;
         let todayPM = score - 4;
         if (todayPM == -3) {
           todayPM += `   🎯`;
@@ -162,7 +159,7 @@ module.exports = {
               dist[0] +
               `
 ---------------------------------------------------------------
-🏌️  __**WORDLE GOLF**__   ⛳
+🏌️  __**WORDLE GOLF**__  ⛳
 **Week** ${week}  **Day** ${golfDay}
 > **Score**: ${todayPM}
 > **Total**: ${plusMinus}
@@ -257,32 +254,32 @@ ${golfStr}
             }
           })
           .then(async () => {
-            let newValues = {
-              $set: {
-                games: numGames,
-                average: avg,
-                jamesScore: jamesScore,
-                distribution: dist,
-                wordleGolf: gScores,
-              },
-            };
-            await mongoose
-              .connect(process.env.MONGO_URI)
-              .then(() => console.log("MongoDB has been connected"))
-              .catch((error) => {
-                console.log(error);
-              });
-            const db = mongoose.connection;
-            const collection = db.collection("Wordle");
-            collection.updateOne(
-              { user: `${username}-${id}` },
-              newValues,
-              { upsert: true },
-              (err, res) => {
-                console.log(res);
-                if (err) throw err;
-              }
-            );
+            // let newValues = {
+            //   $set: {
+            //     games: numGames,
+            //     average: avg,
+            //     jamesScore: jamesScore,
+            //     distribution: dist,
+            //     wordleGolf: gScores,
+            //   },
+            // };
+            // await mongoose
+            //   .connect(process.env.MONGO_URI)
+            //   .then(() => console.log("MongoDB has been connected"))
+            //   .catch((error) => {
+            //     console.log(error);
+            //   });
+            // const db = mongoose.connection;
+            // const collection = db.collection("Wordle");
+            // collection.updateOne(
+            //   { user: `${username}-${id}` },
+            //   newValues,
+            //   { upsert: true },
+            //   (err, res) => {
+            //     console.log(res);
+            //     if (err) throw err;
+            //   }
+            // );
           });
 
         console.log("replied");
@@ -471,7 +468,6 @@ ${golfStr}
               //  console.log({users})
               users = _.orderBy(users, ["jamesScore"], ["desc"]);
               //  console.log('ordered users',users)
-              leaderBoard[i].users = users;
             });
             console.log(leaderBoard[0].users);
             leaderBoard.forEach((leader) => {
@@ -479,12 +475,14 @@ ${golfStr}
               let weekScore = leader.weekScore;
               if (!weekScore && weekScore !== 0) return;
               weekScore = weekScore > 0 ? `+ ${weekScore}` : weekScore;
-              let emoji = pos === 1 ? "    🏆" : "";
               // console.log(value);
               // console.log(weekScore);
-              users.forEach((user) => {
+              users.forEach((user, i) => {
                 // console.log(users.length);
-                let posStr = users.length > 1 ? "T" + pos : "  " + pos;
+
+                let numUsers = users.length;
+                let emoji = pos === 1 && i === 0 ? "    🏆" : "";
+                let posStr = numUsers > 1 ? "T" + pos : "  " + pos;
                 lbStr += `   **${posStr}. ${user.user.substring(
                   0,
                   user.user.indexOf("-")
@@ -493,8 +491,7 @@ ${golfStr}
                 } played   |   **${weekScore}**${emoji}\n`;
                 let js =
                   pos === 1
-                    ? "       " +
-                      `   ↳ **James Score**: ${jamesScores[user.user]}\n`
+                    ? "       " + `   ↳ **James Score**: ${user.jamesScore}\n`
                     : "";
                 lbStr += js;
               });
@@ -509,9 +506,9 @@ ${golfStr}
             } else {
               pinned.first().edit(`${lbStr}`);
             }
+            console.log("the end");
           })
           .then(async () => {
-            // console.log("saving");
             // let newValues = {
             //   $set: {
             //     games: numGames,

@@ -1,0 +1,577 @@
+[
+  {
+    "_id": {
+      "$oid": "62b51d4e5d6f131366950e7f"
+    },
+    "user": "Deej-313407218907349002",
+    "games": 176,
+    "average": "3.886",
+    "jamesScore": "5.995",
+    "distribution": [0, 0, 12, 57, 59, 35, 13],
+    "wordleGolf": {
+      "week1": {
+        "scores": {
+          "day1": 3,
+          "day2": 2,
+          "day3": 3,
+          "day4": 4,
+          "day5": 3,
+          "day6": 5,
+          "day7": 4
+        },
+        "stats": {}
+      },
+      "week2": {
+        "scores": {
+          "day1": 3,
+          "day2": 4,
+          "day3": 3,
+          "day4": 4,
+          "day5": 4,
+          "day6": 5,
+          "day7": 2
+        },
+        "stats": {}
+      },
+      "week3": {
+        "scores": {
+          "day1": 3,
+          "day2": 4,
+          "day3": 4,
+          "day4": 4,
+          "day5": 6,
+          "day6": 4,
+          "day7": 4
+        },
+        "stats": {}
+      },
+      "week4": {
+        "scores": {
+          "day1": 3,
+          "day2": 3,
+          "day3": 6,
+          "day4": 5,
+          "day5": 3,
+          "day6": 5,
+          "day7": 6
+        },
+        "stats": {}
+      },
+      "week5": {
+        "scores": {
+          "day1": 4,
+          "day2": 4,
+          "day3": 6,
+          "day4": 3,
+          "day5": 3,
+          "day6": 4,
+          "day7": 4
+        },
+        "stats": {}
+      },
+      "week6": {
+        "scores": {
+          "day1": 4,
+          "day2": 4,
+          "day3": 4,
+          "day4": 4,
+          "day5": 5,
+          "day6": 5,
+          "day7": 3
+        },
+        "stats": {}
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "62b51d4e5d6f131366950e80"
+    },
+    "user": "tigglemeelmo-384816371701121025",
+    "games": 116,
+    "average": "4.026",
+    "jamesScore": "5.612",
+    "distribution": [1, 1, 2, 31, 45, 27, 9],
+    "wordleGolf": {
+      "week1": {
+        "scores": {
+          "day1": 4,
+          "day2": 5,
+          "day3": 5,
+          "day4": 4,
+          "day5": 5,
+          "day6": 4,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week2": {
+        "scores": {
+          "day1": 3,
+          "day2": 2,
+          "day3": 4,
+          "day4": 5,
+          "day5": 4,
+          "day6": 4,
+          "day7": 2
+        },
+        "stats": {}
+      },
+      "week3": {
+        "scores": {
+          "day1": 4,
+          "day2": 5,
+          "day3": 3,
+          "day4": 4,
+          "day5": 5,
+          "day6": 4,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week4": {
+        "scores": {
+          "day1": 5,
+          "day2": 3,
+          "day3": 6,
+          "day4": 3,
+          "day5": 4,
+          "day6": 4,
+          "day7": 4
+        },
+        "stats": {}
+      },
+      "week5": {
+        "scores": {
+          "day1": 5,
+          "day2": 4,
+          "day3": 5,
+          "day4": 2,
+          "day5": 4,
+          "day6": 4,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week6": {
+        "scores": {
+          "day1": 4,
+          "day2": 5,
+          "day3": 3,
+          "day4": 3,
+          "day5": 4,
+          "day6": 5,
+          "day7": 4
+        },
+        "stats": {}
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "62b51d4e5d6f131366950e81"
+    },
+    "user": "Bill-429427467443503115",
+    "games": 152,
+    "average": "3.763",
+    "jamesScore": "5.958",
+    "distribution": [3, 0, 9, 47, 57, 31, 5],
+    "wordleGolf": {
+      "week1": {
+        "scores": {
+          "day1": 5,
+          "day2": 5,
+          "day3": 3,
+          "day4": 6,
+          "day5": 4,
+          "day6": 4,
+          "day7": 5
+        },
+        "stats": {}
+      },
+      "week2": {
+        "scores": {
+          "day1": 3,
+          "day2": 3,
+          "day3": 3,
+          "day4": 5,
+          "day5": 4,
+          "day6": 5,
+          "day7": 5
+        },
+        "stats": {}
+      },
+      "week3": {
+        "scores": {
+          "day1": 3,
+          "day2": 5,
+          "day3": 4,
+          "day4": 4,
+          "day5": 4,
+          "day6": 4,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week4": {
+        "scores": {
+          "day1": 4,
+          "day2": 3,
+          "day3": 8,
+          "day4": 5,
+          "day5": 4,
+          "day6": 4,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week5": {
+        "scores": {
+          "day1": 5,
+          "day2": 3,
+          "day3": 6,
+          "day4": 4,
+          "day5": 4,
+          "day6": 4,
+          "day7": 4
+        },
+        "stats": {}
+      },
+      "week6": {
+        "scores": {
+          "day1": 5,
+          "day2": 5,
+          "day3": 4,
+          "day4": 3,
+          "day5": 5,
+          "day6": 4
+        },
+        "stats": {}
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "62b51d4e5d6f131366950e82"
+    },
+    "user": "mikeface-149635629989232640",
+    "games": 179,
+    "average": "3.827",
+    "jamesScore": "6.114",
+    "distribution": [0, 0, 9, 61, 70, 30, 9],
+    "wordleGolf": {
+      "week1": {
+        "scores": {
+          "day1": 3,
+          "day2": 4,
+          "day3": 4,
+          "day4": 5,
+          "day5": 4,
+          "day6": 6,
+          "day7": 2
+        },
+        "stats": {}
+      },
+      "week2": {
+        "scores": {
+          "day1": 3,
+          "day2": 3,
+          "day3": 5,
+          "day4": 3,
+          "day5": 3,
+          "day6": 3,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week3": {
+        "scores": {
+          "day1": 4,
+          "day2": 3,
+          "day3": 3,
+          "day4": 5,
+          "day5": 3,
+          "day6": 3,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week4": {
+        "scores": {
+          "day1": 5,
+          "day2": 3,
+          "day3": 4,
+          "day4": 4,
+          "day5": 4,
+          "day6": 3,
+          "day7": 4
+        },
+        "stats": {}
+      },
+      "week5": {
+        "scores": {
+          "day1": 4,
+          "day2": 4,
+          "day3": 4,
+          "day4": 3,
+          "day5": 4,
+          "day6": 3,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week6": {
+        "scores": {
+          "day1": 4,
+          "day2": 5,
+          "day3": 3,
+          "day4": 5,
+          "day5": 3,
+          "day6": 4,
+          "day7": 3
+        },
+        "stats": {}
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "62b51d4e5d6f131366950e83"
+    },
+    "user": "sirprimal-382301758526849028",
+    "games": 173,
+    "average": "4.040",
+    "jamesScore": "5.706",
+    "distribution": [0, 0, 7, 43, 73, 36, 14],
+    "wordleGolf": {
+      "week1": {
+        "scores": {
+          "day1": 5,
+          "day2": 4,
+          "day3": 6,
+          "day4": 4,
+          "day5": 3,
+          "day6": 4,
+          "day7": 2
+        },
+        "stats": {}
+      },
+      "week2": {
+        "scores": {
+          "day1": 3,
+          "day2": 3,
+          "day3": 4,
+          "day4": 3,
+          "day5": 3,
+          "day6": 3,
+          "day7": 6
+        },
+        "stats": {}
+      },
+      "week3": {
+        "scores": {
+          "day1": 3,
+          "day2": 2,
+          "day3": 4,
+          "day4": 4,
+          "day5": 5,
+          "day6": 3,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week4": {
+        "scores": {
+          "day1": 5,
+          "day2": 3,
+          "day3": 5,
+          "day4": 5,
+          "day5": 3,
+          "day6": 4,
+          "day7": 4
+        },
+        "stats": {}
+      },
+      "week5": {
+        "scores": {
+          "day1": 4,
+          "day2": 4,
+          "day3": 5,
+          "day4": 5,
+          "day5": 4,
+          "day6": 3,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week6": {
+        "scores": {
+          "day1": 4,
+          "day2": 3,
+          "day3": 3,
+          "day4": 4,
+          "day5": 5,
+          "day6": 4,
+          "day7": 4
+        },
+        "stats": {}
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "62b51d4e5d6f131366950e84"
+    },
+    "user": "JoeyBuckets-429419300403675138",
+    "games": 47,
+    "average": "4.149",
+    "jamesScore": "5.491",
+    "distribution": [0, 0, 1, 14, 12, 17, 3],
+    "wordleGolf": {
+      "week1": {
+        "scores": {
+          "day1": 5,
+          "day2": 4,
+          "day3": 4,
+          "day4": 3,
+          "day5": 4,
+          "day6": 4,
+          "day7": 4
+        },
+        "stats": {}
+      },
+      "week2": {
+        "scores": {
+          "day1": 5,
+          "day2": 3,
+          "day3": 3,
+          "day4": 4,
+          "day5": 5,
+          "day6": 5,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week3": {
+        "scores": {
+          "day1": 4,
+          "day2": 2,
+          "day3": 4,
+          "day4": 4,
+          "day5": 4,
+          "day6": 3,
+          "day7": 3
+        },
+        "stats": {}
+      },
+      "week4": {
+        "scores": {
+          "day1": 3,
+          "day2": 5,
+          "day3": 3,
+          "day4": 6,
+          "day5": 4,
+          "day6": 5,
+          "day7": 4
+        },
+        "stats": {}
+      },
+      "week5": {
+        "scores": {
+          "day1": 4,
+          "day2": 6,
+          "day3": 4,
+          "day4": 4,
+          "day5": 4,
+          "day6": 5,
+          "day7": 5
+        },
+        "stats": {}
+      },
+      "week6": {
+        "scores": {
+          "day1": 4,
+          "day2": 5,
+          "day3": 4,
+          "day4": 5,
+          "day5": 5,
+          "day6": 4,
+          "day7": 4
+        },
+        "stats": {}
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "62b51d4e5d6f131366950e85"
+    },
+    "user": "mendreks-431531498982866946",
+    "games": 69,
+    "average": "4.188",
+    "jamesScore": "5.041",
+    "distribution": [3, 0, 1, 9, 33, 16, 8],
+    "wordleGolf": {
+      "week1": {
+        "scores": {
+          "day1": 4,
+          "day2": 8,
+          "day3": 3,
+          "day4": 5,
+          "day5": 8,
+          "day6": 8,
+          "day7": 8
+        },
+        "stats": {}
+      },
+      "week2": {
+        "scores": {
+          "day1": 5,
+          "day2": 4,
+          "day3": 4,
+          "day4": 4,
+          "day5": 4,
+          "day6": 8,
+          "day7": 4
+        },
+        "stats": {}
+      },
+      "week3": {
+        "scores": {
+          "day1": 4,
+          "day2": 2,
+          "day3": 5,
+          "day4": 5,
+          "day5": 3,
+          "day6": 4,
+          "day7": 4
+        },
+        "stats": {}
+      },
+      "week4": {
+        "scores": {
+          "day1": 4,
+          "day2": 4,
+          "day3": 6,
+          "day4": 5,
+          "day5": 3,
+          "day6": 6,
+          "day7": 5
+        },
+        "stats": {}
+      },
+      "week5": {
+        "scores": {
+          "day1": 4,
+          "day2": 4,
+          "day3": 6,
+          "day4": 4,
+          "day5": 5,
+          "day6": 8,
+          "day7": 4
+        },
+        "stats": {}
+      }
+    }
+  }
+]
