@@ -436,7 +436,7 @@ ${golfStr}
 ---------------------------------------------------------------
 🏌️  __**WORDLE GOLF**__   ⛳
 **Week** ${week}  **Day** ${golfDay}
-> **Score**: ${todayPM} adfasdfa
+> **Score**: ${todayPM}
 > **Total**: ${plusMinus}
 > **James Score**: ${weekJamesScore}
 ${golfStr}
@@ -489,6 +489,7 @@ ${golfStr}
               //  console.log({users})
               users = _.orderBy(users, ["jamesScore"], ["desc"]);
               //  console.log('ordered users',users)
+              leaderBoard[i].users = users;
             });
             console.log(leaderBoard[0].users);
             leaderBoard.forEach((leader) => {
@@ -496,14 +497,12 @@ ${golfStr}
               let weekScore = leader.weekScore;
               if (!weekScore && weekScore !== 0) return;
               weekScore = weekScore > 0 ? `+ ${weekScore}` : weekScore;
+              let emoji = pos === 1 ? "    🏆" : "";
               // console.log(value);
               // console.log(weekScore);
-              users.forEach((user, i) => {
+              users.forEach((user) => {
                 // console.log(users.length);
-                
-                let numUsers = users.length
-                let emoji = pos === 1 && i === 0 ? "    🏆" : "";
-                let posStr = numUsers > 1 ? "T" + pos : "  " + pos;
+                let posStr = users.length > 1 ? "T" + pos : "  " + pos;
                 lbStr += `   **${posStr}. ${user.user.substring(
                   0,
                   user.user.indexOf("-")
@@ -513,7 +512,7 @@ ${golfStr}
                 let js =
                   pos === 1
                     ? "       " +
-                      `   ↳ **James Score**: ${user.jamesScore}\n`
+                      `   ↳ **James Score**: ${jamesScores[user.user]}\n`
                     : "";
                 lbStr += js;
               });
@@ -528,37 +527,36 @@ ${golfStr}
             } else {
               pinned.first().edit(`${lbStr}`);
             }
-            console.log('the end')
           })
-          // .then(async () => {
-          //   // console.log("saving");
-          //   // let newValues = {
-          //   //   $set: {
-          //   //     games: numGames,
-          //   //     average: avg,
-          //   //     jamesScore: jamesScore,
-          //   //     distribution: dist,
-          //   //     wordleGolf: gScores,
-          //   //   },
-          //   // };
-          //   // await mongoose
-          //   //   .connect(process.env.MONGO_URI)
-          //   //   .then(() => console.log("MongoDB has been connected"))
-          //   //   .catch((error) => {
-          //   //     console.log(error);
-          //   //   });
-          //   // const db = mongoose.connection;
-          //   // const collection = db.collection("Wordle");
-          //   // collection.updateOne(
-          //   //   { user: `${username}-${id}` },
-          //   //   newValues,
-          //   //   { upsert: true },
-          //   //   (err, res) => {
-          //   //     console.log(res);
-          //   //     if (err) throw err;
-          //   //   }
-          //   // );
-          // });
+          .then(async () => {
+            // console.log("saving");
+            // let newValues = {
+            //   $set: {
+            //     games: numGames,
+            //     average: avg,
+            //     jamesScore: jamesScore,
+            //     distribution: dist,
+            //     wordleGolf: gScores,
+            //   },
+            // };
+            // await mongoose
+            //   .connect(process.env.MONGO_URI)
+            //   .then(() => console.log("MongoDB has been connected"))
+            //   .catch((error) => {
+            //     console.log(error);
+            //   });
+            // const db = mongoose.connection;
+            // const collection = db.collection("Wordle");
+            // collection.updateOne(
+            //   { user: `${username}-${id}` },
+            //   newValues,
+            //   { upsert: true },
+            //   (err, res) => {
+            //     console.log(res);
+            //     if (err) throw err;
+            //   }
+            // );
+          });
       });
     }
   },
