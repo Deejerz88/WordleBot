@@ -6,10 +6,6 @@ const mongoose = require("mongoose");
 var _ = require("lodash");
 const createLeaderboard = require("../lib/createLeaderboard.js");
 const updateDB = require("../lib/updateDB.js");
-const james = [
-  0, 1, 0.9253705585449039, 0.7761116756347115, 0.5778998317544551,
-  0.3780879878741986, 0.21887851276999337,
-];
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -32,7 +28,10 @@ module.exports = {
     const user = interaction.user;
     const username = user.username;
     const id = user.id;
-
+    const james = [
+      0, 1, 0.9253705585449039, 0.7761116756347115, 0.5778998317544551,
+      0.3780879878741986, 0.21887851276999337,
+    ];
     //if Wordle score submitted TODO: find better condition
     if (value[0].toLowerCase() === "w") {
       const stringArr = value
@@ -50,6 +49,7 @@ module.exports = {
       let gTotal = 0;
       let golfStr = "";
       let weekJamesTotal = 0;
+
       //recreate & return blocks (if they were sent)
       let blocks = "";
       try {
@@ -74,6 +74,7 @@ module.exports = {
         const gScores = stats.wordleGolf;
         const dist = stats.distribution;
         dist[score]++;
+
         //calc total # of games & average
         const numGames = dist.reduce((a, b) => a + b, 0);
         let total = 0;
@@ -85,7 +86,7 @@ module.exports = {
         dist.forEach((s, i) => (jamesTotal += s * james[i]));
         const jamesScore = ((jamesTotal / numGames) * 10).toFixed(3);
 
-        //Get this week's scores
+        //Get this week's Golf scores
         if (golfDay === 1) {
           gScores[`week${week}`] = { scores: {}, stats: {} };
           gWeek = gScores[`week${week}`].scores;
@@ -93,10 +94,9 @@ module.exports = {
           gWeek = gScores[`week${week}`].scores;
         }
 
-        //Add today's score
+        //Add today's Golf score
         score = !score ? 8 : score;
         gWeek[`day${golfDay}`] = Number(score);
-        console.log(gScores);
 
         //Check for missed Days
         let golfDays = Object.keys(gWeek);
@@ -134,7 +134,7 @@ module.exports = {
           (weekJamesTotal / Object.keys(gWeek).length) *
           10
         ).toFixed(3);
-        
+
         //update this week's scores & stats obj
         gScores[`week${week}`].scores = Object.fromEntries(weekArr);
         gScores[`week${week}`].stats.jamesScore = weekJamesScore;
