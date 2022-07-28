@@ -76,6 +76,7 @@ module.exports = {
         dist[score]++;
 
         //calc total # of games & average
+        let wins = stats.wins
         const numGames = dist.reduce((a, b) => a + b, 0);
         let total = 0;
         dist.forEach((s, i) => (total += s * i));
@@ -165,35 +166,20 @@ module.exports = {
         interaction
           .editReply(
             reply +
-              "\n__**New Totals For " +
-              username +
-              "**__\n> **Total Games:** " +
-              numGames +
-              "\n> **Average:** " +
-              avg +
-              "\n> **James Score:** " +
-              jamesScore +
-              "\n**1's:** " +
-              dist[1] +
-              " | **2's:** " +
-              dist[2] +
-              " | **3's:** " +
-              dist[3] +
-              " | **4's:** " +
-              dist[4] +
-              " | **5's:** " +
-              dist[5] +
-              " | **6's:** " +
-              dist[6] +
-              " | **Fails** " +
-              dist[0] +
               `
+__**New Totals For ${username}**__
+> **Total Games:** ${numGames}
+> **Average:** ${avg}
+> **James Score:** ${jamesScore}
+**1's:** ${dist[1]} | **2's:** 
+${dist[2]} | **3's:** ${dist[3]} | **4's:** ${dist[4]} | **5's:** ${dist[5]} | **6's:** ${dist[6]} | **Fails:** ${dist[0]} 
 ---------------------------------------------------------------
 🏌️  __**WORDLE GOLF**__   ⛳
 **Week** ${week}  **Day** ${golfDay}
 > **Score**: ${todayPM}
 > **Total**: ${plusMinus}
 > **James Score**: ${weekJamesScore}
+> **Wins**: ${wins}
 ${golfStr}
 ---------------------------------------------------------------`
           )
