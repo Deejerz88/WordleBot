@@ -34,7 +34,7 @@ module.exports = {
     const id = user.id;
 
     //if Wordle score submitted TODO: find better condition
-    if (value[0].toLowerCase() === "w") {
+    if (value.split(' ')[0].toLowerCase() === "wordle") {
       const stringArr = value
         .substring(0, value.indexOf("/") + 2)
         .trim()
@@ -108,7 +108,6 @@ module.exports = {
             if (day.slice(-1) != i) {
               gWeek[`day${i}`] = 8;
               i += 1;
-              dist["0"] += 1;
             }
             i += 1;
           });
@@ -165,8 +164,7 @@ module.exports = {
         //reply
         interaction
           .editReply(
-            reply +
-              `
+`${reply}
 __**New Totals For ${username}**__
 > **Total Games:** ${numGames}
 > **Average:** ${avg}

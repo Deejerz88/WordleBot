@@ -6,6 +6,10 @@ const mongoose = require("mongoose");
 var _ = require("lodash");
 const createLeaderboard = require("../lib/createLeaderboard.js");
 const updateDB = require("../lib/updateDB.js");
+const james = [
+  0, 1, 0.9253705585449039, 0.7761116756347115, 0.5778998317544551,
+  0.3780879878741986, 0.21887851276999337,
+];
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -28,12 +32,9 @@ module.exports = {
     const user = interaction.user;
     const username = user.username;
     const id = user.id;
-    const james = [
-      0, 1, 0.9253705585449039, 0.7761116756347115, 0.5778998317544551,
-      0.3780879878741986, 0.21887851276999337,
-    ];
-    //if Wordle score submitted TODO: find better condition
-    if (value[0].toLowerCase() === "w") {
+
+    //if Wordle score submitted
+    if (value.split(' ')[0].toLowerCase() === "wordle") {
       const stringArr = value
         .substring(0, value.indexOf("/") + 2)
         .trim()
@@ -49,7 +50,6 @@ module.exports = {
       let gTotal = 0;
       let golfStr = "";
       let weekJamesTotal = 0;
-
       //recreate & return blocks (if they were sent)
       let blocks = "";
       try {
@@ -74,9 +74,8 @@ module.exports = {
         const gScores = stats.wordleGolf;
         const dist = stats.distribution;
         dist[score]++;
-
         //calc total # of games & average
-        let wins = stats.wins
+        let wins = stats.wins;
         const numGames = dist.reduce((a, b) => a + b, 0);
         let total = 0;
         dist.forEach((s, i) => (total += s * i));
@@ -87,7 +86,7 @@ module.exports = {
         dist.forEach((s, i) => (jamesTotal += s * james[i]));
         const jamesScore = ((jamesTotal / numGames) * 10).toFixed(3);
 
-        //Get this week's Golf scores
+        //Get this week's scores
         if (golfDay === 1) {
           gScores[`week${week}`] = { scores: {}, stats: {} };
           gWeek = gScores[`week${week}`].scores;
@@ -95,9 +94,10 @@ module.exports = {
           gWeek = gScores[`week${week}`].scores;
         }
 
-        //Add today's Golf score
+        //Add today's score
         score = !score ? 8 : score;
         gWeek[`day${golfDay}`] = Number(score);
+        console.log(gScores);
 
         //Check for missed Days
         let golfDays = Object.keys(gWeek);
@@ -108,7 +108,6 @@ module.exports = {
             if (day.slice(-1) != i) {
               gWeek[`day${i}`] = 8;
               i += 1;
-              dist["0"] += 1;
             }
             i += 1;
           });
@@ -158,21 +157,19 @@ module.exports = {
           todayPM = `+ ${todayPM}   😬`;
         } else if (todayPM == 2) {
           todayPM = `+ ${todayPM}   💩`;
-        } else if (todayPM == 3) {
-          todayPM = `+ ${todayPM}   ☃️ `;
+        } else if (todayPM == 4) {
+          todayPM = `+ ${todayPM}   ☃️`;
         }
 
         //reply
         interaction
           .editReply(
-            reply +
-              `
+            `${reply}
 __**New Totals For ${username}**__
 > **Total Games:** ${numGames}
 > **Average:** ${avg}
 > **James Score:** ${jamesScore}
-**1's:** ${dist[1]} | **2's:** 
-${dist[2]} | **3's:** ${dist[3]} | **4's:** ${dist[4]} | **5's:** ${dist[5]} | **6's:** ${dist[6]} | **Fails:** ${dist[0]} 
+**1's:** ${dist[1]} | **2's:** ${dist[2]} | **3's:** ${dist[3]} | **4's:** ${dist[4]} | **5's:** ${dist[5]} | **6's:** ${dist[6]} | **Fails:** ${dist[0]}
 ---------------------------------------------------------------
 🏌️  __**WORDLE GOLF**__   ⛳
 **Week** ${week}  **Day** ${golfDay}
