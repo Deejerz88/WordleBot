@@ -144,21 +144,30 @@ module.exports = {
         plusMinus = plusMinus > 0 ? `+ ${plusMinus}` : plusMinus;
         let todayPM = score - 4;
 
-        //add emoji based on today's golf score
-        if (todayPM == -3) {
-          todayPM += `   🎯`;
-        } else if (todayPM == -2) {
-          todayPM += `   🦅`;
-        } else if (todayPM == -1) {
-          todayPM += `   🐤`;
-        } else if (todayPM == 0) {
-          todayPM += `   👏`;
-        } else if (todayPM == 1) {
-          todayPM = `+ ${todayPM}   😬`;
-        } else if (todayPM == 2) {
-          todayPM = `+ ${todayPM}   💩`;
-        } else if (todayPM == 4) {
-          todayPM = `+ ${todayPM}   ☃️`;
+        switch (todayPM) {
+          case -3:
+            todayPM += `   🎯`;
+            break;
+          case -2:
+            todayPM += `   🦅`;
+            break;
+          case -1:
+            todayPM += `   🐤`;
+            break;
+          case 0:
+            todayPM += `   👏`;
+            break;
+          case 1:
+            todayPM = `+ ${todayPM}   😬`;
+            break;
+          case 2:
+            todayPM = `+ ${todayPM}   💩`;
+            break;
+          case 4:
+            todayPM = `+ ${todayPM}   ☃️`;
+            break;
+          default:
+            todayPM;
         }
 
         //reply

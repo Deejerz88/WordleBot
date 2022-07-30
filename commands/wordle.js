@@ -34,7 +34,7 @@ module.exports = {
     const id = user.id;
 
     //if Wordle score submitted TODO: find better condition
-    if (value.split(' ')[0].toLowerCase() === "wordle") {
+    if (value.split(" ")[0].toLowerCase() === "wordle") {
       const stringArr = value
         .substring(0, value.indexOf("/") + 2)
         .trim()
@@ -75,7 +75,7 @@ module.exports = {
         const dist = stats.distribution;
         dist[score]++;
         //calc total # of games & average
-        let wins = stats.wins
+        let wins = stats.wins;
         const numGames = dist.reduce((a, b) => a + b, 0);
         let total = 0;
         dist.forEach((s, i) => (total += s * i));
@@ -145,26 +145,51 @@ module.exports = {
         let todayPM = score - 4;
 
         //add emoji based on today's golf score
-        if (todayPM == -3) {
-          todayPM += `   🎯`;
-        } else if (todayPM == -2) {
-          todayPM += `   🦅`;
-        } else if (todayPM == -1) {
-          todayPM += `   🐤`;
-        } else if (todayPM == 0) {
-          todayPM += `   👏`;
-        } else if (todayPM == 1) {
-          todayPM = `+ ${todayPM}   😬`;
-        } else if (todayPM == 2) {
-          todayPM = `+ ${todayPM}   💩`;
-        } else if (todayPM == 4) {
-          todayPM = `+ ${todayPM}   ☃️`;
+        // if (todayPM == -3) {
+        //   todayPM += `   🎯`;
+        // } else if (todayPM == -2) {
+        //   todayPM += `   🦅`;
+        // } else if (todayPM == -1) {
+        //   todayPM += `   🐤`;
+        // } else if (todayPM == 0) {
+        //   todayPM += `   👏`;
+        // } else if (todayPM == 1) {
+        //   todayPM = `+ ${todayPM}   😬`;
+        // } else if (todayPM == 2) {
+        //   todayPM = `+ ${todayPM}   💩`;
+        // } else if (todayPM == 4) {
+        //   todayPM = `+ ${todayPM}   ☃️`;
+        // }
+        switch (todayPM) {
+          case -3:
+            todayPM += `   🎯`;
+            break;
+          case -2:
+            todayPM += `   🦅`;
+            break;
+          case -1:
+            todayPM += `   🐤`;
+            break;
+          case 0:
+            todayPM += `   👏`;
+            break;
+          case 1:
+            todayPM = `+ ${todayPM}   😬`;
+            break;
+          case 2:
+            todayPM = `+ ${todayPM}   💩`;
+            break;
+          case 4:
+            todayPM = `+ ${todayPM}   ☃️`;
+            break;
+          default:
+            todayPM
         }
 
         //reply
         interaction
           .editReply(
-`${reply}
+            `${reply}
 __**New Totals For ${username}**__
 > **Total Games:** ${numGames}
 > **Average:** ${avg}
